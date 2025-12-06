@@ -1,5 +1,6 @@
 {
   "name": "eclipse-os",
+  "homepage": "https://amiddlebrook.github.io/eclipse-os/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
