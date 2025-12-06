@@ -1,0 +1,5 @@
+{
+  "name": "Eclipse OS",
+  "description": "A cinematic dark-mode interface centered around a reactive light ring (The Eclipse). Features singularity-to-viewport transitions and deep void aesthetics.",
+  "requestFramePermissions": []
+}
