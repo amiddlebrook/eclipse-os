@@ -4,6 +4,8 @@
 
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare-Workers-f38020?logo=cloudflare&logoColor=white) ![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-222?logo=github) ![Cost](https://img.shields.io/badge/mandatory_cost-%240-ccf576)
 
+**Live application:** [Open Eclipse OS](https://eclipse-os.averymiddlebrook2014.workers.dev) · [Health API](https://eclipse-os.averymiddlebrook2014.workers.dev/api/health)
+
 ## What works
 
 | Module | Function |
@@ -26,7 +28,7 @@ Requires a free Cloudflare account and a GitHub repository. Static assets are se
 3. Push to the default branch, **source**, or run **Cloudflare / CI & Deploy** via Actions → Run workflow.
 4. GitHub Actions will install dependencies, typecheck, build and deploy the Worker and static assets to the generated workers.dev endpoint.
 
-The stable URL is shown in the deployment job log after successful deployment (usually https://eclipse-os.<your-subdomain>.workers.dev). A paid domain is **not** necessary. Workers.dev must be enabled for the account.
+The production URL is **https://eclipse-os.averymiddlebrook2014.workers.dev** (also shown in the deployment job log). A paid domain is **not** necessary. Workers.dev must be enabled for the account.
 
 The workflow validates pull requests without deploying them. If credentials are missing, validation still runs but deployment is skipped, with a clear note in the job output. Add the secrets before considering the site live.
 
@@ -54,7 +56,7 @@ For a manual production deployment (after wrangler login):
 
 ## CI/CD
 
-The workflow at .github/workflows/cloudflare.yml runs for pull requests, pushes to source and manual dispatch. Validation uses npm ci, npm run typecheck and npm run build; production deploy uses cloudflare/wrangler-action@v4. The previous GitHub Pages upload workflow has been retired, since it uploaded raw TSX without compiling the app.
+The workflow at .github/workflows/cloudflare.yml runs for pull requests, pushes to source and manual dispatch. Validation uses npm ci, npm run typecheck and npm run build; production deploy uses cloudflare/wrangler-action@v4, followed by live HTTP smoke tests for the HTML, favicon, health API, and diagnostics API. The previous GitHub Pages upload workflow has been retired, since it uploaded raw TSX without compiling the app.
 
 ## Architecture
 

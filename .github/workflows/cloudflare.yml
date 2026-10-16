@@ -57,6 +57,19 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: '4.136.3'
           command: deploy
+      - name: Smoke test deployed site
+        if: steps.credentials.outputs.ready == 'true'
+        env:
+          APP_URL: https://eclipse-os.averymiddlebrook2014.workers.dev
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 6 --retry-all-errors --retry-delay 3 --max-time 25 "$APP_URL/" -o /tmp/eclipse-home.html
+          grep -q 'Eclipse OS' /tmp/eclipse-home.html
+          curl -fsSL --retry 6 --retry-all-errors --retry-delay 3 --max-time 25 "$APP_URL/api/health" -o /tmp/eclipse-health.json
+          curl -fsSL --retry 6 --retry-all-errors --retry-delay 3 --max-time 25 "$APP_URL/api/diagnostics" -o /tmp/eclipse-diagnostics.json
+          curl -fsSL --retry 6 --retry-all-errors --retry-delay 3 --max-time 25 "$APP_URL/favicon.svg" -o /tmp/eclipse-favicon.svg
+          node --input-type=commonjs -e 'const fs=require("node:fs"); const h=JSON.parse(fs.readFileSync("/tmp/eclipse-health.json","utf8")); const d=JSON.parse(fs.readFileSync("/tmp/eclipse-diagnostics.json","utf8")); if(h.status!=="operational"||h.service!=="eclipse-os"||d.checks?.runtime!==true||d.checks?.securityHeaders!==true)process.exit(1); console.log("Live Cloudflare Worker and diagnostic APIs verified",h.version,h.colo);'
+          echo "Production smoke tests passed: $APP_URL"
       - name: Deployment not configured
         if: steps.credentials.outputs.ready != 'true'
         run: echo "Build passed. Deployment skipped until Cloudflare secrets are configured."
