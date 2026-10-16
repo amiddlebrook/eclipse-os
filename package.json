@@ -1,12 +1,13 @@
 {
   "name": "eclipse-os",
-  "homepage": "https://amiddlebrook.github.io/eclipse-os/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "typecheck": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
